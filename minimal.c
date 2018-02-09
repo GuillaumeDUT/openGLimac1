@@ -5,8 +5,8 @@
 #include <stdio.h>
 
 /* Dimensions de la fenêtre */
-static unsigned int WINDOW_WIDTH = 800;
-static unsigned int WINDOW_HEIGHT = 600;
+static unsigned int WINDOW_WIDTH =400;
+static unsigned int WINDOW_HEIGHT = 400;
 
 /* Nombre de bits par pixel de la fenêtre */
 static const unsigned int BIT_PER_PIXEL = 32;
@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
     }
 
     /* Ouverture d'une fenêtre et création d'un contexte OpenGL */
-    if(NULL == SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, BIT_PER_PIXEL, SDL_OPENGL | SDL_GL_DOUBLEBUFFER)) {
+    if(NULL == SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, BIT_PER_PIXEL, SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_RESIZABLE)) {
         fprintf(stderr, "Impossible d'ouvrir la fenetre. Fin du programme.\n");
         return EXIT_FAILURE;
     }
@@ -59,11 +59,35 @@ int main(int argc, char** argv) {
                 /* Clic souris */
                 case SDL_MOUSEBUTTONUP:
                     printf("clic en (%d, %d)\n", e.button.x, e.button.y);
+                    if(e.button.x <=200 && e.button.y <=200 ){
+                      glClearColor(0, 0, 0, 1.0);
+                      glClear(GL_COLOR_BUFFER_BIT);
+                      printf("clic carré haut gauche\n");
+                    }
+                    if(e.button.x >=200 && e.button.y <=200 ){
+                      glClearColor(0, 1.0, 0, 1.0);
+                      glClear(GL_COLOR_BUFFER_BIT);
+                      printf("clic carré bas gauche\n");
+                    }
+                    if(e.button.x <=200 && e.button.y >=200 ){
+                      glClearColor(1.0, 0, 0, 1.0);
+                      glClear(GL_COLOR_BUFFER_BIT);
+                      printf("clic carré haut droit\n");
+                    }
+                    if(e.button.x >=200 && e.button.y >=200 ){
+                      glClearColor(1.0, 1.0, 0, 1.0);
+                      glClear(GL_COLOR_BUFFER_BIT);
+                      printf("clic carré bas droit\n");
+                    }
                     break;
 
                 /* Touche clavier */
                 case SDL_KEYDOWN:
                     printf("touche pressée (code = %d)\n", e.key.keysym.sym);
+                    if(e.key.keysym.sym == 113){
+                      printf("touche Q pressée \n");
+                      return EXIT_SUCCESS;
+                    }
                     break;
 
                 default:
