@@ -90,6 +90,26 @@ int main(int argc, char** argv) {
                     }
                     break;
 
+                case SDL_MOUSEMOTION:
+                  /*printf("coord X : %d\n",e.motion.x); */
+                  if(e.button.x <=200 && e.button.y <=200 ){
+                    glClearColor(0, 0, 0, 1.0);
+                    glClear(GL_COLOR_BUFFER_BIT);
+                  }
+                  if(e.button.x >=200 && e.button.y <=200 ){
+                    glClearColor(0, 1.0, 0, 1.0);
+                    glClear(GL_COLOR_BUFFER_BIT);
+                  }
+                  if(e.button.x <=200 && e.button.y >=200 ){
+                    glClearColor(1.0, 0, 0, 1.0);
+                    glClear(GL_COLOR_BUFFER_BIT);
+                  }
+                  if(e.button.x >=200 && e.button.y >=200 ){
+                    glClearColor(1.0, 1.0, 0, 1.0);
+                    glClear(GL_COLOR_BUFFER_BIT);
+                  }
+                  break;
+
                 default:
                     break;
             }
