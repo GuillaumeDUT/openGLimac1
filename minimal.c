@@ -14,9 +14,18 @@ static const unsigned int BIT_PER_PIXEL = 32;
 /* Nombre minimal de millisecondes separant le rendu de deux images */
 static const Uint32 FRAMERATE_MILLISECONDS = 1000 / 60;
 
+void resize(int w, int h){
+  SDL_SetVideoMode(w, h, BIT_PER_PIXEL, SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_RESIZABLE);
+  glViewport(0, 0, w, h);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  gluOrtho2D(-1., 1., -1., 1.);
+}
+
 int main(int argc, char** argv) {
 
     /* Initialisation de la SDL */
+    float x,y;
     if(-1 == SDL_Init(SDL_INIT_VIDEO)) {
         fprintf(stderr, "Impossible d'initialiser la SDL. Fin du programme.\n");
         return EXIT_FAILURE;
@@ -91,25 +100,16 @@ int main(int argc, char** argv) {
                     break;
 
                 case SDL_MOUSEMOTION:
+                  x = e.motion.x;
+                  y = e.motion.y;
                   /*printf("coord X : %d\n",e.motion.x); */
-                  if(e.button.x <=200 && e.button.y <=200 ){
-                    glClearColor(0, 0, 0, 1.0);
-                    glClear(GL_COLOR_BUFFER_BIT);
-                  }
-                  if(e.button.x >=200 && e.button.y <=200 ){
-                    glClearColor(0, 1.0, 0, 1.0);
-                    glClear(GL_COLOR_BUFFER_BIT);
-                  }
-                  if(e.button.x <=200 && e.button.y >=200 ){
-                    glClearColor(1.0, 0, 0, 1.0);
-                    glClear(GL_COLOR_BUFFER_BIT);
-                  }
-                  if(e.button.x >=200 && e.button.y >=200 ){
-                    glClearColor(1.0, 1.0, 0, 1.0);
-                    glClear(GL_COLOR_BUFFER_BIT);
-                  }
-                  break;
 
+                  glClearColor((x/WINDOW_WIDTH),(y/WINDOW_HEIGHT),0,1);
+                  glClear(GL_COLOR_BUFFER_BIT);
+                  break;
+                case SDL_VIDEORESIZE:
+                  resize(e.resize.w,e.resize.h);
+                  break;
                 default:
                     break;
             }
