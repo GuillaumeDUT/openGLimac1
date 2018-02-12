@@ -49,8 +49,7 @@ int main(int argc, char** argv) {
 
         /* Placer ici le code de dessin */
 
-        /* Echange du front et du back buffer : mise à jour de la fenêtre */
-        SDL_GL_SwapBuffers();
+
 
         /* Boucle traitant les evenements */
         SDL_Event e;
@@ -122,6 +121,9 @@ int main(int argc, char** argv) {
         if(elapsedTime < FRAMERATE_MILLISECONDS) {
             SDL_Delay(FRAMERATE_MILLISECONDS - elapsedTime);
         }
+
+        /* Echange du front et du back buffer : mise à jour de la fenêtre */
+        SDL_GL_SwapBuffers();
     }
 
     /* Liberation des ressources associées à la SDL */
