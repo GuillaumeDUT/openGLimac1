@@ -23,7 +23,7 @@ void resizeViewport() {
     glViewport(0,0, WINDOW_WIDTH, WINDOW_HEIGHT);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(-8., 8., -6., 6.);
+    gluOrtho2D(-16., 16., -12., 12.);
 
     }
 
@@ -40,26 +40,26 @@ void drawSquare(int full){
 void drawLandMark(){
   glColor3ub(255,0,0);
   glBegin(GL_LINES);
-    glVertex2f(-8,0);
-    glVertex2f(8,0);
+    glVertex2f(-16,0);
+    glVertex2f(16,0);
   glEnd();
 
-  for(int i=-8;i<8;i++){
+  for(int i=-16;i<16;i++){
     glBegin(GL_LINES);
-      glVertex2f(i,0.05);
-      glVertex2f(i,-0.05);
+      glVertex2f(i,0.1);
+      glVertex2f(i,-0.1);
     glEnd();
   }
 
   glColor3ub(0,255,0);
   glBegin(GL_LINES);
-    glVertex2f(0,-6);
-    glVertex2f(0,6);
+    glVertex2f(0,-12);
+    glVertex2f(0,12);
   glEnd();
-  for(int i=-6;i<6;i++){
+  for(int i=-12;i<12;i++){
     glBegin(GL_LINES);
-      glVertex2f(0.05,i);
-      glVertex2f(-0.05,i);
+      glVertex2f(0.1,i);
+      glVertex2f(-0.1,i);
     glEnd();
   }
 
@@ -121,10 +121,10 @@ void drawFirstArm(){
   glColor3ub(0,255,125);
   glPushMatrix();
     glBegin(GL_POLYGON);
-      glVertex2f(3,0.5);
-      glVertex2f(3,-0.5);
-      glVertex2f(-3,-1);
-      glVertex2f(-3,1);
+      glVertex2f(3,1);
+      glVertex2f(3,-1);
+      glVertex2f(-3,-2);
+      glVertex2f(-3,2);
     glEnd();
   glPopMatrix();
 
@@ -133,7 +133,7 @@ void drawFirstArm(){
   glPushMatrix();
     glTranslatef(-3,0.0,0.0);
     glPushMatrix();
-      glScalef(2,2,1);
+      glScalef(4,4,1);
       drawCircle(1);
     glPopMatrix();
   glPopMatrix();
@@ -141,7 +141,10 @@ void drawFirstArm(){
   glColor3ub(255,0,125);
   glPushMatrix();
     glTranslatef(3,0.0,0.0);
-    drawCircle(1);
+    glPushMatrix();
+      glScalef(2,2,1);
+      drawCircle(1);
+    glPopMatrix();
   glPopMatrix();
 }
 
@@ -199,6 +202,29 @@ void drawThirdArm(){
   glPopMatrix();
 }
 
+void drawEntireArm(float alpha, float beta, float gamma){
+  glPushMatrix();
+    glRotatef(alpha,0,0,1);
+    //glTranslatef(4,4,0);
+    drawFirstArm();
+  glPopMatrix();
+  glPushMatrix();
+    glTranslatef(4.25,1.75,0);
+    glPushMatrix();
+      glRotatef(beta,0,0,1);
+      drawSecondArm();
+    glPopMatrix();
+  glPopMatrix();
+
+  glPushMatrix();
+    glTranslatef(8,2.5,0);
+    glPushMatrix();
+      glRotatef(gamma,0,0,1);
+      drawThirdArm();
+    glPopMatrix();
+  glPopMatrix();
+}
+
 int main(int argc, char** argv) {
 
     /* Initialisation de la SDL */
@@ -223,7 +249,9 @@ int main(int argc, char** argv) {
     /* On créé une première primitive par défaut */
     int loop=1;
 
-
+    float randomA = 45;
+    float randomG = 35;
+    float randomB = -10;
     /* Boucle d'affichage */
     while(loop) {
 
@@ -235,12 +263,17 @@ int main(int argc, char** argv) {
         glClear(GL_COLOR_BUFFER_BIT); // Toujours commencer par clear le buffer
         drawLandMark();
 
+        randomA = rand()%2  ? randomA + 1 : randomA -1;
+        randomB = rand()%2  ? randomB + 1 : randomB -1;
+        randomG = rand()%2  ? randomG + 1 : randomG -1;
+
+        drawEntireArm(randomA,randomB,randomG);
         //drawRoundedSquare(0.5);
 
-         drawFirstArm();
+         //drawFirstArm();
         //
-         drawSecondArm();
-         drawThirdArm();
+         //drawSecondArm();
+         //drawThirdArm();
         /* Boucle traitant les evenements */
         SDL_Event e;
         while(SDL_PollEvent(&e)) {
