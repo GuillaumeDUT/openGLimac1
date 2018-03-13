@@ -18,6 +18,7 @@ static const unsigned int BIT_PER_PIXEL = 32;
 static const Uint32 FRAMERATE_MILLISECONDS = 1000 / 60;
 
 
+
 void resizeViewport() {
     SDL_SetVideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, BIT_PER_PIXEL, SDL_OPENGL | SDL_RESIZABLE);
     glViewport(0,0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -117,110 +118,124 @@ void drawRoundedSquare(float taille){
   glPopMatrix();
 }
 
-void drawFirstArm(){
-  glColor3ub(0,255,125);
-  glPushMatrix();
-    glBegin(GL_POLYGON);
-      glVertex2f(3,1);
-      glVertex2f(3,-1);
-      glVertex2f(-3,-2);
-      glVertex2f(-3,2);
-    glEnd();
-  glPopMatrix();
-
-
-  glColor3ub(255,125,0);
-  glPushMatrix();
-    glTranslatef(-3,0.0,0.0);
+GLuint drawFirstArmIDList(){
+  GLuint id = glGenLists(1);
+  glNewList(id, GL_COMPILE);
+    glColor3ub(0,255,125);
     glPushMatrix();
-      glScalef(4,4,1);
-      drawCircle(1);
+      glBegin(GL_POLYGON);
+        glVertex2f(0,1);
+        glVertex2f(0,-1);
+        glVertex2f(-6,-2);
+        glVertex2f(-6,2);
+      glEnd();
     glPopMatrix();
-  glPopMatrix();
 
-  glColor3ub(255,0,125);
-  glPushMatrix();
-    glTranslatef(3,0.0,0.0);
+    glColor3ub(255,125,0);
     glPushMatrix();
-      glScalef(2,2,1);
-      drawCircle(1);
+      glTranslatef(-6,0.0,0.0);
+      glPushMatrix();
+        glScalef(4,4,1);
+        drawCircle(1);
+      glPopMatrix();
     glPopMatrix();
-  glPopMatrix();
+
+    glColor3ub(255,0,125);
+    glPushMatrix();
+      glTranslatef(0,0.0,0.0);
+      glPushMatrix();
+        glScalef(2,2,1);
+        drawCircle(1);
+      glPopMatrix();
+    glPopMatrix();
+  glEndList();
+  return id;
 }
 
-void drawSecondArm(){
-  glColor3ub(255,255,255);
-  glPushMatrix();
-    glTranslatef(2,0,0);
-    drawRoundedSquare(0.5);
-  glPopMatrix();
-  glPushMatrix();
-    glTranslatef(-2,0,0);
-    drawRoundedSquare(0.5);
-  glPopMatrix();
-
-  glColor3ub(50,50,50);
-  glPushMatrix();
-    glScalef(2.3,0.3,0.0);
-    glBegin(GL_POLYGON);
-      glVertex2f(1,1);
-      glVertex2f(1,-1);
-      glVertex2f(-1,-1);
-      glVertex2f(-1,1);
-    glEnd();
-  glPopMatrix();
-}
-
-void drawThirdArm(){
-  glColor3ub(0,255,0);
-  glPushMatrix();
-    glTranslatef(-2,0,0);
+GLuint drawSecondArmIDList(){
+  GLuint id = glGenLists(1);
+  glNewList(id, GL_COMPILE);
+    glColor3ub(255,255,255);
     glPushMatrix();
-      glScalef(0.6,0.6,1);
+      glTranslatef(2,0,0);
       drawRoundedSquare(0.5);
     glPopMatrix();
-  glPopMatrix();
-
-  glColor3ub(255,0,0);
-  glPushMatrix();
-    glScalef(2,0.2,1);
-    glBegin(GL_POLYGON);
-      glVertex2f(1,1);
-      glVertex2f(1,-1);
-      glVertex2f(-1,-1);
-      glVertex2f(-1,1);
-    glEnd();
-  glPopMatrix();
-
-  glColor3ub(0,125,255);
-  glPushMatrix();
-    glTranslatef(2,0,0);
     glPushMatrix();
-      glScalef(0.8,0.8,0);
-      drawCircle(1);
+      glTranslatef(-2,0,0);
+      drawRoundedSquare(0.5);
     glPopMatrix();
-  glPopMatrix();
+
+    glColor3ub(50,50,50);
+    glPushMatrix();
+      glScalef(2.3,0.3,0.0);
+      glBegin(GL_POLYGON);
+        glVertex2f(1,1);
+        glVertex2f(1,-1);
+        glVertex2f(-1,-1);
+        glVertex2f(-1,1);
+      glEnd();
+    glPopMatrix();
+  glEndList();
+  return id;
+}
+
+GLuint drawThirdArmIDList(){
+  GLuint id = glGenLists(1);
+  glNewList(id, GL_COMPILE);
+    glColor3ub(0,255,0);
+    glPushMatrix();
+      glTranslatef(0,0,0);
+      glPushMatrix();
+        glScalef(0.6,0.6,1);
+        drawRoundedSquare(0.5);
+      glPopMatrix();
+    glPopMatrix();
+
+    glColor3ub(255,0,0);
+    glPushMatrix();
+      glTranslatef(2,0,0);
+      glPushMatrix();
+        glScalef(2,0.2,1);
+        glBegin(GL_POLYGON);
+          glVertex2f(1,1);
+          glVertex2f(1,-1);
+          glVertex2f(-1,-1);
+          glVertex2f(-1,1);
+        glEnd();
+      glPopMatrix();
+    glPopMatrix();
+
+    glColor3ub(0,125,255);
+    glPushMatrix();
+      glTranslatef(4,0,0);
+      glPushMatrix();
+        glScalef(0.8,0.8,0);
+        drawCircle(1);
+      glPopMatrix();
+    glPopMatrix();
+  glEndList();
+  return id;
 }
 
 void drawEntireArm(float alpha, float beta, float gamma){
   glPushMatrix();
     glRotatef(alpha,0,0,1);
     //glTranslatef(4,4,0);
-    drawFirstArm();
+    glCallList(drawFirstArmIDList());
   glPopMatrix();
   glPushMatrix();
-    glTranslatef(4.25,1.75,0);
+    glTranslatef(2,-0.5,0);
     glPushMatrix();
       glRotatef(beta,0,0,1);
-      drawSecondArm();
+      glCallList(drawSecondArmIDList());
     glPopMatrix();
   glPopMatrix();
 
   glPushMatrix();
-    glTranslatef(8,2.5,0);
+    glTranslatef(4,-0.75,0);
     glPushMatrix();
       glRotatef(gamma,0,0,1);
-      drawThirdArm();
+      glCallList(drawThirdArmIDList());
     glPopMatrix();
   glPopMatrix();
 }
@@ -251,7 +266,9 @@ int main(int argc, char** argv) {
 
     float randomA = 45;
     float randomG = 35;
-    float randomB = -10;
+    //float randomB = -10;
+    int reverse =0;
+
     /* Boucle d'affichage */
     while(loop) {
 
@@ -263,11 +280,25 @@ int main(int argc, char** argv) {
         glClear(GL_COLOR_BUFFER_BIT); // Toujours commencer par clear le buffer
         drawLandMark();
 
-        randomA = rand()%2  ? randomA + 1 : randomA -1;
-        randomB = rand()%2  ? randomB + 1 : randomB -1;
-        randomG = rand()%2  ? randomG + 1 : randomG -1;
+        if(randomG==120){
+          reverse = 1;
+        }
+        if(randomG==-35){
+          reverse = 0;
+        }
+        if(reverse){
+          randomA = randomA-1;
+          randomG = randomG-1;
+        }else{
+          randomA = randomA+1;
+          randomG = randomG+1;
+        }
 
-        drawEntireArm(randomA,randomB,randomG);
+        // randomA = rand()%2  ? randomA + 5 : randomA -5;
+        // randomB = rand()%2  ? randomB + 5 : randomB -5;
+        // randomG = rand()%2  ? randomG + 5 : randomG -5;
+        //glCallList(firstArm);
+        drawEntireArm(randomA,-10,randomG);
         //drawRoundedSquare(0.5);
 
          //drawFirstArm();
