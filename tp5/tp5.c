@@ -12,7 +12,7 @@
 #define ZOOM 500
 #define DIVIDETIME 50
 
-#define WINDOW_SCALE 50
+#define WINDOW_SCALE 40
 
 static unsigned int WINDOW_WIDTH = 800;
 static unsigned int WINDOW_HEIGHT = 800;
@@ -125,6 +125,9 @@ Planet ajouterPlanete(char name[100], float size, float sun_dist, float rot_spee
 
 void afficherPlanet(Planet planet){
   //printf("%s\n",planet->name);
+
+  glColor3ub(255,255,255);
+
 
   glColor3ub(planet->r,planet->v,planet->b);
   glPushMatrix();
